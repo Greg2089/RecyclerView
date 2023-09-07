@@ -8,15 +8,18 @@ import com.example.recyclerview.R
 import com.example.recyclerview.databinding.PlantItemBinding
 import com.example.recyclerview.model.Plant
 
-class PlantAdapter : RecyclerView.Adapter<PlantAdapter.PlantHolder>() {
+class PlantAdapter(val listener: Listener) : RecyclerView.Adapter<PlantAdapter.PlantHolder>() {
     val plantList = ArrayList<Plant>()
 
     class PlantHolder(item: View) : RecyclerView.ViewHolder(item) {
         val binding = PlantItemBinding.bind(item)
-        fun bind(plant: Plant) {
+        fun bind(plant: Plant, listener: Listener) {
             with(binding) {
                 im.setImageResource(plant.imageId)
                 tvTitle.text = plant.title
+                itemView.setOnClickListener {
+                    listener.onClick(plant)
+                }
             }
         }
     }
@@ -34,7 +37,7 @@ class PlantAdapter : RecyclerView.Adapter<PlantAdapter.PlantHolder>() {
      */
 
     override fun onBindViewHolder(holder: PlantHolder, position: Int) {
-        holder.bind(plantList[position])
+        holder.bind(plantList[position], listener)
     }
 
     /**
@@ -49,5 +52,9 @@ class PlantAdapter : RecyclerView.Adapter<PlantAdapter.PlantHolder>() {
         plantList.add(plant)
         notifyDataSetChanged()
 
+    }
+
+    interface Listener {
+        fun onClick(plant: Plant)
     }
 }
